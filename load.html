@@ -27,27 +27,35 @@
     <button id="pov-indoor">POV Indoor</button>
     <button id="pov-outdoor">POV Outdoor</button>
 
-    <div id="lighting-controls" style="position: fixed; top: 10px; left: 10px; z-index: 1000;">
-      <label>
-        <span>X Direction</span>
-        <input id="sliderX" type="range" min="-500" max="500" value="50">
-      </label>
-      <br>
-      <label>
-        <span>Y Direction</span>
-        <input id="sliderY" type="range" min="0" max="500" value="200">
-      </label>
-      <br>
-      <label>
-        <span>Z Direction</span>
-        <input id="sliderZ" type="range" min="-500" max="500" value="-200">
-      </label>
-      <br>
-      <label>
-        <span>Light Intensity</span>
-        <input id="sliderIntensity" type="range" min="0" max="5" step="0.1" value="0.7">
-      </label>
-    </div>
+    <div>
+  <label for="ambient-intensity">Ambient Light Intensity</label>
+  <input type="range" id="ambient-intensity" min="0" max="1" step="0.01" value="0.1">
+  <span id="ambient-intensity-value">0.1</span>
+</div>
+
+<div>
+  <label for="sun-light-x">Sun Light Position X</label>
+  <input type="range" id="sun-light-x" min="-200" max="200" step="1" value="50">
+  <span id="sun-light-x-value">50</span>
+</div>
+
+<div>
+  <label for="sun-light-y">Sun Light Position Y</label>
+  <input type="range" id="sun-light-y" min="0" max="200" step="1" value="200">
+  <span id="sun-light-y-value">200</span>
+</div>
+
+<div>
+  <label for="sun-light-z">Sun Light Position Z</label>
+  <input type="range" id="sun-light-z" min="-200" max="200" step="1" value="-200">
+  <span id="sun-light-z-value">-200</span>
+</div>
+
+<div>
+  <label for="sun-light-intensity">Sun Light Intensity</label>
+  <input type="range" id="sun-light-intensity" min="0" max="10" step="0.1" value="1">
+  <span id="sun-light-intensity-value">1</span>
+</div>
 
     <div id="progress-container">
       <div id="progress">LOADING 0/100</div>

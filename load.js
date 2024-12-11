@@ -119,6 +119,51 @@ class SceneManager {
     document.getElementById("pov-outdoor").addEventListener("click", this.togglePOV.bind(this));
     document.getElementById("toggle-time").addEventListener("change", this.onTimeChange.bind(this));
 
+    // Ambient Light Intensity
+    const ambientIntensitySlider = document.getElementById("ambient-intensity");
+    const ambientIntensityValue = document.getElementById("ambient-intensity-value");
+    ambientIntensitySlider.addEventListener("input", (event) => {
+      const intensity = event.target.value;
+      this.ambientLight.intensity = intensity;
+      ambientIntensityValue.innerText = intensity;
+    });
+
+    // Sun Light Position X
+    const sunLightXSlider = document.getElementById("sun-light-x");
+    const sunLightXValue = document.getElementById("sun-light-x-value");
+    sunLightXSlider.addEventListener("input", (event) => {
+      const x = event.target.value;
+      this.sunLight.position.x = x;
+      sunLightXValue.innerText = x;
+    });
+
+    // Sun Light Position Y
+    const sunLightYSlider = document.getElementById("sun-light-y");
+    const sunLightYValue = document.getElementById("sun-light-y-value");
+    sunLightYSlider.addEventListener("input", (event) => {
+      const y = event.target.value;
+      this.sunLight.position.y = y;
+      sunLightYValue.innerText = y;
+    });
+
+    // Sun Light Position Z
+    const sunLightZSlider = document.getElementById("sun-light-z");
+    const sunLightZValue = document.getElementById("sun-light-z-value");
+    sunLightZSlider.addEventListener("input", (event) => {
+      const z = event.target.value;
+      this.sunLight.position.z = z;
+      sunLightZValue.innerText = z;
+    });
+
+    // Sun Light Intensity
+    const sunLightIntensitySlider = document.getElementById("sun-light-intensity");
+    const sunLightIntensityValue = document.getElementById("sun-light-intensity-value");
+    sunLightIntensitySlider.addEventListener("input", (event) => {
+      const intensity = event.target.value;
+      this.sunLight.intensity = intensity;
+      sunLightIntensityValue.innerText = intensity;
+    });
+
     this.setupIndoorCameraControls();
   }
 
@@ -350,6 +395,9 @@ class SceneManager {
     this.sky = new THREE.Mesh(skyGeometry, skyMaterial);
     this.scene.add(this.sky);
   }
+
+  //interactive light
+  
 
   animate() {
     requestAnimationFrame(this.animate.bind(this));
