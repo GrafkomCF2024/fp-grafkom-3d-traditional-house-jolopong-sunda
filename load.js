@@ -98,6 +98,19 @@ class SceneManager {
     spotLight.position.set(10, 20, 10);
     spotLight.castShadow = true;
     this.scene.add(spotLight);
+
+    this.createDirectionalLight();
+
+    // Update lighting once the time is selected
+    document.getElementById("toggle-time").addEventListener("change", this.onTimeChange.bind(this));
+  }
+
+  createDirectionalLight() {
+    this.sunLight = new THREE.DirectionalLight(0xffddaa, 10);
+    this.sunLight.position.set(50, 200, -200);
+    this.sunLight.target.position.set(0, 0, 0);
+    this.sunLight.castShadow = true;
+    this.scene.add(this.sunLight);
   }
 
   setupEventListeners() {
@@ -259,17 +272,7 @@ class SceneManager {
     this.createSkyGradient(0xffda97, 0x82ebe0);
     this.ambientLight.color.set(0xffb58c);
     this.ambientLight.intensity = 0.1;
-
-    if (!this.sunLight) {
-      this.sunLight = new THREE.DirectionalLight(0xffddaa, 10);
-      this.sunLight.position.set(50, 200, -200);
-      this.sunLight.target.position.set(0, 0, 0);
-      this.sunLight.castShadow = true;
-      this.scene.add(this.sunLight);
-    }
-    this.sunLight.visible = true;
-    this.sunLight.intensity = 0.7;
-    this.sunLight.shadow.bias = -0.0001;
+    this.updateSunlightPositionAndIntensity(50, 200, -200, 0.7);
   }
 
   setupNoonLighting() {
@@ -278,37 +281,16 @@ class SceneManager {
     this.createSkyGradient(0x87ceeb, 0xffffff);
     this.ambientLight.color.set(0xfdfbd3);
     this.ambientLight.intensity = 1;
-
-    if (!this.sunLight) {
-      this.sunLight = new THREE.DirectionalLight(0xffddaa, 10);
-      this.sunLight.position.set(50, 20, -200);
-      this.sunLight.target.position.set(0, 0, 0);
-      this.sunLight.castShadow = true;
-      this.scene.add(this.sunLight);
-    }
-    this.sunLight.visible = true;
-    this.sunLight.intensity = 0.7;
-    this.sunLight.shadow.bias = -0.0001;
+    this.updateSunlightPositionAndIntensity(50, 20, -200, 0.7);
   }
 
   setupEveningLighting() {
     // Sore
     this.renderer.setClearColor(0xf4e3c1);
-    this.createSkyGradient(0x82ebe0,0xffda97);
+    this.createSkyGradient(0x82ebe0, 0xffda97);
     this.ambientLight.color.set(0xfdfbd3);
     this.ambientLight.intensity = 0.5;
-
-    // Spot light untuk sinar matahari di langit
-    if (!this.sunLight) {
-      this.sunLight = new THREE.DirectionalLight(0xffddaa, 10);
-      this.sunLight.position.set(50, 20, -200);
-      this.sunLight.target.position.set(0, 0, 0);
-      this.sunLight.castShadow = true;
-      this.scene.add(this.sunLight);
-    }
-    this.sunLight.visible = true;
-    this.sunLight.intensity = 0.7;
-    this.sunLight.shadow.bias = -0.0001;
+    this.updateSunlightPositionAndIntensity(50, 20, -200, 0.7);
   }
 
   setupNightLighting() {
@@ -325,6 +307,12 @@ class SceneManager {
       this.scene.add(this.spotLight1);
     }
     this.spotLight1.visible = true;
+  }
+
+  updateSunlightPositionAndIntensity(x, y, z, intensity) {
+    this.sunLight.position.set(x, y, z);
+    this.sunLight.intensity = intensity;
+    this.sunLight.visible = true;
   }
 
   createSkyGradient(colorTop, colorBottom) {

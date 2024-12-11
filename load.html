@@ -27,6 +27,28 @@
     <button id="pov-indoor">POV Indoor</button>
     <button id="pov-outdoor">POV Outdoor</button>
 
+    <div id="lighting-controls" style="position: fixed; top: 10px; left: 10px; z-index: 1000;">
+      <label>
+        <span>X Direction</span>
+        <input id="sliderX" type="range" min="-500" max="500" value="50">
+      </label>
+      <br>
+      <label>
+        <span>Y Direction</span>
+        <input id="sliderY" type="range" min="0" max="500" value="200">
+      </label>
+      <br>
+      <label>
+        <span>Z Direction</span>
+        <input id="sliderZ" type="range" min="-500" max="500" value="-200">
+      </label>
+      <br>
+      <label>
+        <span>Light Intensity</span>
+        <input id="sliderIntensity" type="range" min="0" max="5" step="0.1" value="0.7">
+      </label>
+    </div>
+
     <div id="progress-container">
       <div id="progress">LOADING 0/100</div>
     </div>
