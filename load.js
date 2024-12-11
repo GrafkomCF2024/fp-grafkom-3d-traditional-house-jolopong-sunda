@@ -12,6 +12,10 @@ class SceneManager {
     this.controls = null;
     this.sunLight = null;
     this.spotLight1 = null;
+
+    this.flashlight = null;
+    this.flashlightIntensity = 0;
+
     this.isMouseDown = false;
     this.previousMousePosition = { x: 0, y: 0 };
 
@@ -27,6 +31,8 @@ class SceneManager {
     this.setupEventListeners();
     this.loadModel();
     this.updateLighting("pagi");
+    this.createFlashlight();
+    this.setupFlashlightControls();
   }
 
   initRenderer() {
@@ -113,11 +119,97 @@ class SceneManager {
     this.scene.add(this.sunLight);
   }
 
+  createFlashlight() {
+    this.flashlight = new THREE.SpotLight(0xffffff, 0, 50, Math.PI / 6, 0.5);
+    this.flashlight.position.set(0, 1.5, 0);
+    this.flashlight.target.position.set(0, 1.5, -10);
+    this.flashlight.castShadow = true;
+    this.flashlight.visible = false;
+    
+    const targetObject = new THREE.Object3D();
+    targetObject.position.set(0, 1.5, -10);
+    
+    this.scene.add(this.flashlight);
+    this.scene.add(this.flashlight.target);
+    this.scene.add(targetObject);
+  }
+
+  setupFlashlightControls() {
+    const flashlightSlider = document.getElementById("flashlight-intensity");
+    const flashlightValue = document.getElementById("flashlight-intensity-value");
+
+    flashlightSlider.addEventListener("input", (event) => {
+      if (this.currentCamera === this.indoorCamera) {
+        const intensity = parseFloat(event.target.value);
+        this.flashlightIntensity = intensity;
+        this.flashlight.intensity = intensity;
+        this.flashlight.visible = intensity > 0;
+        flashlightValue.innerText = intensity.toFixed(1);
+      } else {
+        flashlightSlider.value = 0;
+        flashlightValue.innerText = "0.0";
+      }
+    });
+  }
+
+  updateFlashlightPosition() {
+    if (this.flashlightIntensity > 0 && this.currentCamera === this.indoorCamera) {
+      this.flashlight.position.copy(this.indoorCamera.position);
+      
+      const direction = new THREE.Vector3(0, 0, -1);
+      direction.applyQuaternion(this.indoorCamera.quaternion);
+      
+      this.flashlight.target.position.copy(
+        this.indoorCamera.position.clone().add(direction.multiplyScalar(10))
+      );
+    }
+  }
+
+  togglePOV() {
+    if (this.currentCamera === this.outdoorCamera) {
+      this.currentCamera = this.indoorCamera;
+      this.controls.enabled = false;
+      
+      if (this.flashlightIntensity > 0) {
+        const flashlightSlider = document.getElementById("flashlight-intensity");
+        const flashlightValue = document.getElementById("flashlight-intensity-value");
+        flashlightSlider.value = 0;
+        this.flashlightIntensity = 0;
+        this.flashlight.intensity = 0;
+        this.flashlight.visible = false;
+        flashlightValue.innerText = "0.0";
+      }
+    } else {
+      this.currentCamera = this.outdoorCamera;
+      this.controls.enabled = true;
+      
+      const flashlightSlider = document.getElementById("flashlight-intensity");
+      const flashlightValue = document.getElementById("flashlight-intensity-value");
+      flashlightSlider.value = 0;
+      this.flashlightIntensity = 0;
+      this.flashlight.intensity = 0;
+      this.flashlight.visible = false;
+      flashlightValue.innerText = "0.0";
+    }
+    this.controls.object = this.currentCamera;
+  }
+
   setupEventListeners() {
     window.addEventListener("resize", this.onWindowResize.bind(this));
     document.getElementById("pov-indoor").addEventListener("click", this.togglePOV.bind(this));
     document.getElementById("pov-outdoor").addEventListener("click", this.togglePOV.bind(this));
     document.getElementById("toggle-time").addEventListener("change", this.onTimeChange.bind(this));
+
+    // Flashlight Intensity
+    const flashlightSlider = document.getElementById("flashlight-intensity");
+    const flashlightValue = document.getElementById("flashlight-intensity-value");
+    flashlightSlider.addEventListener("input", (event) => {
+      const intensity = parseFloat(event.target.value);
+      this.flashlightIntensity = intensity;
+      this.flashlight.intensity = intensity;
+      this.flashlight.visible = intensity > 0;
+      flashlightValue.innerText = intensity.toFixed(1);
+    });
 
     // Ambient Light Intensity
     const ambientIntensitySlider = document.getElementById("ambient-intensity");
@@ -404,6 +496,9 @@ class SceneManager {
     if (this.controls.enabled) {
       this.controls.update();
     }
+
+    this.updateFlashlightPosition();
+
     this.renderer.render(this.scene, this.currentCamera);
   }
 
