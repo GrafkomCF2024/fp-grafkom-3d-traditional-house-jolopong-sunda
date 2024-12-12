@@ -396,9 +396,6 @@ class SceneManager {
     this.scene.add(this.sky);
   }
 
-  //interactive light
-  
-
   animate() {
     requestAnimationFrame(this.animate.bind(this));
     if (this.controls.enabled) {
