@@ -1,31 +1,96 @@
+/* @font-face declaration */
 @font-face {
   font-family: 'Code';
-  src: local('Code Light'), url(fonts/code_light.otf) format('otf');
+  src: local('Code Light'), url('fonts/code_light.otf') format('otf');
 }
 
 body {
-  background-color: black;
+  font-family: 'Code', sans-serif;
   margin: 0;
+  padding: 0;
+  color: black;
+  overflow: hidden;
 }
 
-#heading {
+#control-container {
   position: fixed;
-  width: 100%;
-  padding: 64px;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 10;
+  background-color: white;
+  opacity: 0.8;
+  width: 15rem;
+  border-radius: 40px;
 }
 
-.border {
-  background: linear-gradient(90deg, gray, 90%, black);
-  height: 2px;
-  width: 1100px;
-  margin-top: 4px;
+#control-container select,
+#control-container button,
+#control-container input {
+  background-color: #333;
+  color: #d7d7d7;
+  border: 2px solid #555;
+  border-radius: 5px;
+  font-size: 1.2em;
+  margin: 10px;
 }
 
-h1 {
-  color: rgb(215, 215, 215);
-  font-size: 7em;
-  font-family: 'Code';
-  margin: 0px;
+#control-container select {
+  width: 200px;
+}
+
+#control-container input[type="range"] {
+  width: 80%;
+  height: 8px;
+  background-color: #333;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+#control-container input[type="range"]::-webkit-slider-runnable-track {
+  background: #666;
+  border-radius: 5px;
+}
+
+#control-container input[type="range"]::-webkit-slider-thumb {
+  background: #d7d7d7;
+  border-radius: 50%;
+  height: 16px;
+  width: 16px;
+  border: 2px solid #555;
+}
+
+#control-container input[type="range"]:active::-webkit-slider-thumb {
+  background: #ff8c00;
+}
+
+#control-container label {
+  font-size: 1.1em;
+  margin-bottom: 8px;
+  display: block;
+}
+
+button {
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  background-color: #333;
+  color: #d7d7d7;
+  border: 2px solid #555;
+}
+
+button:hover {
+  background-color: #ff8c00;
+  transform: scale(1.1);
+}
+
+button:focus {
+  outline: none;
 }
 
 #progress-container {
@@ -35,11 +100,52 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 20;
 }
 
 #progress {
-  font-family: 'Code';
+  font-family: 'Code', sans-serif;
   font-size: 48px;
   font-weight: bold;
   color: white;
+}
+
+select:focus {
+  outline: none;
+}
+
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 4em;
+  }
+
+  #heading {
+    padding: 32px;
+  }
+
+  #control-container {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  select {
+    width: 80%;
+  }
+
+  button {
+    font-size: 1em;
+    padding: 10px 20px;
+  }
+
+  #control-container input[type="range"] {
+    width: 90%;
+  }
+}
+
+#slider {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
