@@ -202,6 +202,15 @@ class SceneManager {
     document.getElementById("pov-outdoor").addEventListener("click", this.togglePOV.bind(this));
     document.getElementById("toggle-time").addEventListener("change", this.onTimeChange.bind(this));
 
+    const sunLightColorInput = document.getElementById("sun-light-color");
+    sunLightColorInput.addEventListener("input", (event) => {
+      const color = event.target.value; // Mendapatkan warna dari input
+      this.sunLight.color.set(color); // Mengatur warna Directional Light
+    });
+
+    // Set warna awal dari slider ke Directional Light
+    this.sunLight.color.set(sunLightColorInput.value);
+    
     // Flashlight Intensity
     const flashlightSlider = document.getElementById("flashlight-intensity");
     const flashlightValue = document.getElementById("flashlight-intensity-value");
