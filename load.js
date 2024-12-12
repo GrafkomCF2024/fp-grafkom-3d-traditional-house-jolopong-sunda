@@ -19,6 +19,9 @@ class SceneManager {
     this.isMouseDown = false;
     this.previousMousePosition = { x: 0, y: 0 };
 
+    this.backgroundAudio = null;
+    this.currentAudio = null;
+
     this.init();
   }
 
@@ -33,6 +36,7 @@ class SceneManager {
     this.updateLighting("pagi");
     this.createFlashlight();
     this.setupFlashlightControls();
+    this.setupBackgroundAudio();
   }
 
   initRenderer() {
@@ -125,10 +129,10 @@ class SceneManager {
     this.flashlight.target.position.set(0, 1.5, -10);
     this.flashlight.castShadow = true;
     this.flashlight.visible = false;
-    
+
     const targetObject = new THREE.Object3D();
     targetObject.position.set(0, 1.5, -10);
-    
+
     this.scene.add(this.flashlight);
     this.scene.add(this.flashlight.target);
     this.scene.add(targetObject);
@@ -155,13 +159,11 @@ class SceneManager {
   updateFlashlightPosition() {
     if (this.flashlightIntensity > 0 && this.currentCamera === this.indoorCamera) {
       this.flashlight.position.copy(this.indoorCamera.position);
-      
+
       const direction = new THREE.Vector3(0, 0, -1);
       direction.applyQuaternion(this.indoorCamera.quaternion);
-      
-      this.flashlight.target.position.copy(
-        this.indoorCamera.position.clone().add(direction.multiplyScalar(10))
-      );
+
+      this.flashlight.target.position.copy(this.indoorCamera.position.clone().add(direction.multiplyScalar(10)));
     }
   }
 
@@ -169,7 +171,7 @@ class SceneManager {
     if (this.currentCamera === this.outdoorCamera) {
       this.currentCamera = this.indoorCamera;
       this.controls.enabled = false;
-      
+
       if (this.flashlightIntensity > 0) {
         const flashlightSlider = document.getElementById("flashlight-intensity");
         const flashlightValue = document.getElementById("flashlight-intensity-value");
@@ -182,7 +184,7 @@ class SceneManager {
     } else {
       this.currentCamera = this.outdoorCamera;
       this.controls.enabled = true;
-      
+
       const flashlightSlider = document.getElementById("flashlight-intensity");
       const flashlightValue = document.getElementById("flashlight-intensity-value");
       flashlightSlider.value = 0;
@@ -257,6 +259,37 @@ class SceneManager {
     });
 
     this.setupIndoorCameraControls();
+  }
+
+  setupBackgroundAudio() {
+    this.backgroundAudio = new Audio();
+    this.backgroundAudio.loop = true;
+
+    document.getElementById("toggle-time").addEventListener("change", (event) => {
+      const timeOfDay = event.target.value;
+      this.updateBackgroundAudio(timeOfDay);
+    });
+
+    this.updateBackgroundAudio("pagi");
+  }
+
+  updateBackgroundAudio(timeOfDay) {
+    const audioFiles = {
+      pagi: "sound/morning.mp3",
+      siang: "sound/noon.mp3",
+      sore: "sound/noon.mp3",
+      malam: "sound/night.mp3",
+    };
+
+    if (this.currentAudio) {
+      this.backgroundAudio.pause();
+      this.backgroundAudio.currentTime = 0;
+    }
+
+    this.backgroundAudio.src = audioFiles[timeOfDay];
+    this.backgroundAudio.play();
+
+    this.currentAudio = this.backgroundAudio; 
   }
 
   onWindowResize() {
